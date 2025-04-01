@@ -1,7 +1,8 @@
-
-
 <?php if($currentTab == 'all-listings' && !$listing): ?>
-    <h2>All listings</h2>
+    <div class="all-listing-header">
+        <h2>My Listings</h2>
+        <a href="?tab=add-new-listing">Add new Listing</a>
+    </div>
 
     <?php
 
@@ -101,6 +102,8 @@
                                 <tr>
                                     <th scope="col">Listing Key</th>
                                     <th scope="col">Street</th>
+									<th scope="col">City</th>
+									<th scope="col">State</th>
                                     <th scope="col">Satus</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Delete</th>
@@ -112,6 +115,8 @@
                                     <tr>
                                         <td><a href="?tab=all-listings&listing=<?php echo esc_html($result['ListingKey']); ?>"><?php echo esc_html($result['ListingKey']); ?></a></td>
                                         <td><?php echo esc_html($result['StreetName']); ?></td>
+										<td><?php echo esc_html($result['City']); ?></td>
+										<td><?php echo esc_html($result['StateOrProvince']); ?></td>
                                         <td><?php echo esc_html($result['StandardStatus']); ?></td>
                                         <td><?php echo isset($result['ListPrice']) ? '$' . number_format($result['ListPrice'], 2) : ''; ?></td>
                                         <td><a href="?tab=all-listings&delete=<?php echo $result['ListingKey'] ?>">Delete</a></td>

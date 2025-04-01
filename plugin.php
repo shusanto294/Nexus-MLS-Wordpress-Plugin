@@ -18,11 +18,13 @@ class MLSIntegration {
 
     public function __construct() {
 
-        // $this->apiKey = get_option('mls_api_key', '');
+        $this->apiKey = get_option('mls_api_key', '');
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_init', array($this, 'register_settings'));
         add_shortcode('nexus_mls_dashboard', 'render_dashboard_shortcode');
     }
+
+
 
     public function register_settings() {
         register_setting('mls_settings', 'mls_api_key');
@@ -87,9 +89,66 @@ class MLSIntegration {
         </div>
         <?php
     }
+
+    //Add new listing
+    public function nexus_mls_add_new_listing(){
+        if(isset($_GET['tab']) && $_GET['tab'] == 'add-new-listing'){
+            $current_user = wp_get_current_user();
+            $user_email = $current_user->user_email;
+            $full_name = $current_user->display_name;
+
+            $formData = [
+                'ListAgentEmail' => $user_email,
+            ];
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => "https://api.nexusmls.io/Property",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($formData),
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer $this->apiKey",
+                    "Content-Type: application/json",
+                ],
+            ]);
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #:" . $err;
+            } else {
+                $jsonResponse = json_decode($response, true);
+                // echo '<pre>';
+                // var_Dump($jsonResponse);
+                // echo '</pre>';
+
+                if($jsonResponse['ListingKey']){
+                    //Redirect user to homepageurl/agent-dashboard/?tab=all-listings&listing=$jsonResponse['ListingKey'] using wp redirect
+                    $listingKey = $jsonResponse['ListingKey'];
+                    $redirectUrl = home_url('/agent-dashboard/?tab=all-listings&listing=' . $listingKey);
+
+                    wp_redirect($redirectUrl);
+                    exit;
+
+                }
+            }
+        }
+
+    }
+
 }
 
-$mls_integration = new MLSIntegration();
+$nexusMLS = new MLSIntegration();
 
 function restrict_nexus_mls_dashboard_page() {
     // Check if the current page contains the [nexus_mls_dashboard] shortcode
@@ -147,3 +206,4 @@ function handle_media_upload() {
 }
 
 
+add_action('init', array($nexusMLS, 'nexus_mls_add_new_listing'));

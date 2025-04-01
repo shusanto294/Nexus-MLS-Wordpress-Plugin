@@ -19,6 +19,56 @@ function render_dashboard_shortcode() {
 
     ?>
     <style>
+
+        .listing-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 15px;
+            row-gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .listing-tabs button {
+            background: #ddd;
+            padding: 12px 25px;
+        }
+
+        .listing-tabs button.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .column-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            column-gap: 20px;
+        }
+
+        .inline-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            column-gap: 10px;
+        }
+
+        .inline-checkboxes label {
+            color: #000;
+        }
+
+        .nexus-mls-dashboard-content .all-listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nexus-mls-dashboard-content .all-listing-header a {
+            background: #000;
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            line-height: 1;
+        }
+
         .nexus-mls-dashboard {
             display: grid;
             grid-template-columns: 1fr 3fr;
@@ -135,8 +185,8 @@ function render_dashboard_shortcode() {
             <nav>
                 <ul>
                     <li><a href="?tab=dashboard" class="<?php echo $currentTab == 'dashboard' ? 'active' : ''; ?>">Dashboard</a></li>
-                    <li><a href="?tab=all-listings" class="<?php echo $currentTab == 'all-listings' ? 'active' : ''; ?>">All Listings</a></li>
-                    <li><a href="?tab=add-new-listing" class="<?php echo $currentTab == 'add-new-listing' ? 'active' : ''; ?>">Add new listing</a></li>
+                    <li><a href="?tab=all-listings" class="<?php echo $currentTab == 'all-listings' ? 'active' : ''; ?>">My Listings</a></li>
+                    <!-- <li><a href="?tab=add-new-listing" class="<?php echo $currentTab == 'add-new-listing' ? 'active' : ''; ?>">Add New Listing</a></li> -->
                 </ul>
             </nav>
         </div>
@@ -146,7 +196,6 @@ function render_dashboard_shortcode() {
                 require_once plugin_dir_path(__FILE__) . 'dashboard.php';
                 require_once plugin_dir_path(__FILE__) . 'all-listings.php';
                 require_once plugin_dir_path(__FILE__) . 'listing-single.php';
-                require_once plugin_dir_path(__FILE__) . 'add-new-listing.php';
             ?>
         </div>
     </div>
