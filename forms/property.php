@@ -1267,59 +1267,25 @@
     </div>
 </div>
 
+<h2>Room Details</h2>
 
-<!-- <h2>Room Details</h2>
 
 <div class="column-5">
     <label for="BathroomsFull"># of Bathrooms</label>
-    <input type="text" name="BathroomsFull" id="BathroomsFull" placeholder="Full Baths" >
-    <input type="text" name="BathroomsThreeQuarter" id="BathroomsThreeQuarter" placeholder="Three-Quarter Baths" >
-    <input type="text" name="BathroomsHalf" id="BathroomsHalf" placeholder="Half Baths" >
-    <input type="text" name="BathroomsOneQuarter" id="BathroomsOneQuarter" placeholder="Quarter Baths" >
+    <input type="text" name="BathroomsFull" id="BathroomsFull" placeholder="Full Baths" value="<?php echo $listingData['BathroomsFull']; ?>" >
+    <input type="text" name="BathroomsThreeQuarter" id="BathroomsThreeQuarter" placeholder="Three-Quarter Baths" value="<?php echo $listingData['BathroomsThreeQuarter']; ?>" >
+    <input type="text" name="BathroomsHalf" id="BathroomsHalf" placeholder="Half Baths" value="<?php echo $listingData['BathroomsHalf']; ?>" >
+    <input type="text" name="BathroomsOneQuarter" id="BathroomsOneQuarter" placeholder="Quarter Baths" value="<?php echo $listingData['BathroomsOneQuarter']; ?>" >
 </div>
 
-<div class="column-5">
-    <label for="OwnersBedroom-RoomLength">Owner's Bedroom</label>
-    <input type="text" name="OwnersBedroom-RoomLength" id="OwnersBedroom-RoomLength" placeholder="Width(ft)" >
-    <input type="text" name="OwnersBedroom-RoomWidth" id="OwnersBedroom-RoomWidth" placeholder="Length (ft)" >
-    <select id="OwnersBedroom-ClosetType" name="OwnersBedroom-ClosetType">
-        <option value="None">None</option>
-        <option value="Built-in Closet">Built-in Closet</option>
-        <option value="Walk-in Closet">Walk-in Closet</option>
-    </select>
-    <select id="OwnersBedroom-RoomLevel" name="OwnersBedroom-RoomLevel">
-        <option value="Basement">Basement</option>
-        <option value="First">First</option>
-        <option value="Lower">Lower</option>
-        <option value="Main">Main</option>
-        <option value="Second">Second</option>
-        <option value="Third">Third</option>
-        <option value="Upper">Upper</option>
-    </select>
+<!-- <div>
+    <?php //echo $listingData['OwnersBedroom-RoomLength'] ?>
 </div>
 
-
-<div class="column-5">
-    <label for="Bedroom1-RoomLength">Bedroom 1</label>
-    <input type="text" name="Bedroom1-RoomLength" id="Bedroom1-RoomLength" placeholder="Width(ft)" >
-    <input type="text" name="Bedroom1-RoomWidth" id="Bedroom1-RoomWidth" placeholder="Length (ft)" >
-    <select id="Bedroom1-ClosetType" name="Bedroom1-ClosetType">
-        <option value="None">None</option>
-        <option value="Built-in Closet">Built-in Closet</option>
-        <option value="Walk-in Closet">Walk-in Closet</option>
-    </select>
-    <select id="Bedroom1-RoomLevel" name="Bedroom1-RoomLevel">
-        <option value="Basement">Basement</option>
-        <option value="First">First</option>
-        <option value="Lower">Lower</option>
-        <option value="Main">Main</option>
-        <option value="Second">Second</option>
-        <option value="Third">Third</option>
-        <option value="Upper">Upper</option>
-    </select>
-</div>
- -->
+<div>
+    Bedroom 1
+</div> -->
 
 
- <button type="submit">Save Informations</button>
+ <button type="submit">Save Information</button>
 </form>

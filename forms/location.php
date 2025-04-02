@@ -127,5 +127,5 @@
     <input type="text" id="Longitude" name="Longitude" value="<?php echo $listingData['Longitude']; ?>">
 </div>
 
-<button type="submit">Save Informations</button>
+<button type="submit">Save Information</button>
 </form>

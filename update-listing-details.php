@@ -5,10 +5,45 @@ if(isset($_POST['ListingKey'])):
 
     $formData = $_POST;
 
+   
+
     // Remove ListingKey if it exists
     if (isset($formData['ListingKey'])) {
         unset($formData['ListingKey']);
     }
+
+    // Define an array of all the boolean fields that need conversion
+    $booleanFields = [
+        'GarageYN',
+        'CarportYN',
+        'OpenParkingYN',
+        'HeatingYN',
+        'CoolingYN',
+        'ElectricOnPropertyYN',
+        'PoolPrivateYN',
+        'SpaYN',
+        'FireplaceYN',
+        'WaterfrontYN',
+        'PowerProductionYN',
+        'AssociationYN',
+        'CommunityStyleYN',
+        'HomeWarrantyYN',
+    ];
+
+    // Loop through each field and set its value to true or false
+    foreach ($booleanFields as $field) {
+        $formData[$field] = isset($formData[$field]) ? true : false;
+    }
+
+    // Convert the Concessions field to Yes or No
+    if(isset($formData['Concessions'])) {
+        $formData['Concessions'] = 'Yes';
+    } else {
+        $formData['Concessions'] = 'No'; // Default to No if not set
+    }
+
+
+    var_dump($formData); // Debugging line to check the form data
 
     $curl = curl_init();
 

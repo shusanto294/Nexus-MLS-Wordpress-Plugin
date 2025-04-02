@@ -142,4 +142,32 @@
         </form>
     <?php endif; ?>
 
+
+    <script>
+        //Delete the activeListingTab_* items from localStorage when the all-listings page loads
+        
+        jQuery(document).ready(function($) {
+            // This function clears all activeListingTab_* items from localStorage
+            function clearListingTabData() {
+                // Get all keys in localStorage
+                for (var i = 0; i < localStorage.length; i++) {
+                    var key = localStorage.key(i);
+                    
+                    // Check if the key starts with 'activeListingTab_'
+                    if (key && key.startsWith('activeListingTab_')) {
+                        // Remove this item from localStorage
+                        localStorage.removeItem(key);
+                    }
+                }
+                
+                // Optionally, you can also clear the lastVisitedPage
+                // localStorage.removeItem('lastVisitedPage');
+            }
+            
+            // Call the function when the all-listings page loads
+            clearListingTabData();
+        });
+    </script>
+
 <?php endif; ?>
+
