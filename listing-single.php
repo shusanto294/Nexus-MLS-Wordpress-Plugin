@@ -1,8 +1,11 @@
 <?php if($currentTab == 'all-listings' && $listing != null): ?>
 
 <?php
+/*
 require_once plugin_dir_path(__FILE__) . 'update-listing-details.php';
 require_once plugin_dir_path(__FILE__) . 'fetch-listing-details.php';
+*/
+
 
 // Get current active tab
 $activeTab = $_SESSION['activeTab'];

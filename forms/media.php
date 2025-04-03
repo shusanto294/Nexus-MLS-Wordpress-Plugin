@@ -4,6 +4,8 @@
     if(isset($_GET['deleteMedia'])):
         // echo 'Deleting media';
 
+        $curl = curl_init();
+
         $media = $_GET['deleteMedia'];
         
         curl_setopt_array($curl, [

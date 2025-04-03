@@ -2,7 +2,7 @@
 /*
 Plugin Name: Nexus MLS Real Estate Integration
 Description: Integrates Nexus MLS API with WordPress
-Version: 1.0.1
+Version: 2.0.0
 Author: Cloud Nine Web (Shusanto)
 Author URI: https://cloudnineweb.co/
 */

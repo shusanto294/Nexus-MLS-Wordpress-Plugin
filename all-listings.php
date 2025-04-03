@@ -40,7 +40,7 @@
                 // echo 'Response: ';
                 // var_dump($response);
 
-                echo '<p style="color: red;">Listing Deleted</p>';
+                echo '<p style="color: red;margin-bottom: 20px;">Listing Deleted</p>';
                 
             }
         }
