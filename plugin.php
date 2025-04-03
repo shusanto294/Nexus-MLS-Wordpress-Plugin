@@ -11,6 +11,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Set default active tab if not set
+if (!isset($_SESSION['activeTab'])) {
+    $_SESSION['activeTab'] = 0;
+}
+
+// Update active tab if form submitted
+if (isset($_POST['selected_tab'])) {
+    $_SESSION['activeTab'] = intval($_POST['selected_tab']);
+}
+
+
 
 require_once plugin_dir_path(__FILE__) . 'shortcode.php';
 

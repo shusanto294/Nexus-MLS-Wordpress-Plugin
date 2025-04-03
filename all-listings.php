@@ -1,10 +1,12 @@
 <?php if($currentTab == 'all-listings' && !$listing): ?>
     <div class="all-listing-header">
-        <h2>My Listings</h2>
+        <h2 style="background: none;padding: 0;">My Listings</h2>
         <a href="?tab=add-new-listing">Add new Listing</a>
     </div>
 
     <?php
+
+        $_SESSION['activeTab'] = 0;
 
         $curl = curl_init();
 

@@ -109,9 +109,9 @@
 
         $oldMediaItems = $data['value'];
 
-        echo '<pre>';
-            var_dump($oldMediaItems);
-        echo '</pre>';
+        // echo '<pre>';
+        //     var_dump($oldMediaItems);
+        // echo '</pre>';
     }
 
     // Filter out non-image files from $oldMediaItems
@@ -132,30 +132,24 @@
 
 ?>
 
+<h2>Photos</h2>
 
+<div class="media-items">
+    <?php foreach($oldImages as $item): ?>
+        <div class="media-item">
+            <img src="<?php echo $item['MediaURL'] ?>" width="100" alt="Preview">
+            <a type="button" class="remove-image" href="?tab=all-listings&listing=<?php echo $listing; ?>&deleteMedia=<?php echo $item['MediaKey'] ?>">Remove</a>
+        </div>
+    <?php endforeach; ?>
+</div>
 
 <form method="POST" class="nexus-mls-form">
     <div class="upload-field">
-        <label for="Media">Photos</label>
+        <label for="Media">Upload new</label>
         <input type="file" name="Media" id="mediaFiles" multiple accept="image/*" required>
-        <div id="uploadPreview">
-            <?php foreach($oldImages as $item): ?>
-                <div class="preview-item">
-
-                <input type="checkbox" 
-                               name="Media[]" 
-                               value="${url}" 
-                               id="media_${index}"
-                               checked>
-                        <label for="media_${index}">
-                            <img src="<?php echo $item['MediaURL'] ?>" width="100" alt="Preview">
-                        </label>
-                        <a type="button" class="remove-image" href="?tab=all-listings&listing=<?php echo $listing; ?>&deleteMedia=<?php echo $item['MediaKey'] ?>">Remove</a>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <div id="uploadPreview"></div>
     </div>
-    <button type="submit">Update Photos</button>
+    <button type="submit">Upload Photos</button>
 </form>
 
 <script>
@@ -222,6 +216,29 @@ document.getElementById('uploadPreview').addEventListener('click', function(e) {
 
 
 <style>
+
+.media-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.media-item {
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 10px 0;
+}
+
+.media-item a{
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
+
 .preview-item {
     display: flex;
     align-items: center;
