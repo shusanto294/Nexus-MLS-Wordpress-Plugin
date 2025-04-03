@@ -24,6 +24,10 @@ require_once plugin_dir_path(__FILE__) . 'fetch-listing-details.php';
         require_once plugin_dir_path(__FILE__) . 'forms/parking-utilities.php';
         require_once plugin_dir_path(__FILE__) . 'forms/amenities-hoa.php';
         require_once plugin_dir_path(__FILE__) . 'forms/listing-agent.php';
+        require_once plugin_dir_path(__FILE__) . 'forms/open-house-tours.php';
+        require_once plugin_dir_path(__FILE__) . 'forms/new-construction.php';
+        require_once plugin_dir_path(__FILE__) . 'forms/media.php';
+        require_once plugin_dir_path(__FILE__) . 'forms/docs.php';
     ?>
 </div>
 

@@ -40,34 +40,6 @@
     <div>
         <h5>Listing Terms</h5>
         <div class="inline-checkboxes">
-<!-- Options
-
-1031 Exchange
-All Inclusive Trust Deed
-Assumable
-Cash
-Contract
-Conventional
-Existing Bonds
-FHA
-Land Use Fee
-Lease Back
-Lease Option
-Lease Purchase
-Lien Release
-Owner May Carry
-Owner Pay Points
-Owner Will Carry
-Private Financing Available
-Relocation Property
-Seller Equity Share
-Special Funding
-Submit
-Trade
-Trust Conveyance
-Trust Deed
-USDA Loan
-VA Loan -->
 
         <label>
             <input type="checkbox" name="ListingTerms[]" value="1031 Exchange" <?php echo in_array('1031 Exchange', $listingData['ListingTerms']) ? 'checked' : ''; ?>>

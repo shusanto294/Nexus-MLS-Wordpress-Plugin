@@ -5,8 +5,6 @@ if(isset($_POST['ListingKey'])):
 
     $formData = $_POST;
 
-   
-
     // Remove ListingKey if it exists
     if (isset($formData['ListingKey'])) {
         unset($formData['ListingKey']);
@@ -28,6 +26,7 @@ if(isset($_POST['ListingKey'])):
         'AssociationYN',
         'CommunityStyleYN',
         'HomeWarrantyYN',
+        'NewConstructionYN'
     ];
 
     // Loop through each field and set its value to true or false
@@ -40,6 +39,16 @@ if(isset($_POST['ListingKey'])):
         $formData['Concessions'] = 'Yes';
     } else {
         $formData['Concessions'] = 'No'; // Default to No if not set
+    }
+
+    // Convery SpecReadyDate to this format 2025-04-19T13:28:12.000Z
+    if (isset($formData['SpecReadyDate'])) {
+        $date = DateTime::createFromFormat('Y-m-d', $formData['SpecReadyDate']);
+        if ($date) {
+            $formData['SpecReadyDate'] = $date->format(DateTime::ATOM); // Convert to ISO 8601 format
+        } else {
+            unset($formData['SpecReadyDate']); // Remove if date is invalid
+        }
     }
 
 
@@ -72,5 +81,7 @@ if(isset($_POST['ListingKey'])):
     } else {
     echo $response;
     }
+
+
 
 endif;
