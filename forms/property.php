@@ -43,6 +43,7 @@ if(isset($_POST['ListingKey'])):
 endif;
 
 require_once plugin_dir_path(__FILE__) . '../fetch-listing-details.php';
+require_once plugin_dir_path(__FILE__) . '../fetch-room-details.php';
 
 
 ?>
@@ -1317,26 +1318,11 @@ require_once plugin_dir_path(__FILE__) . '../fetch-listing-details.php';
     </div>
 </div>
 
-
-<h2>Room Details</h2>
-
-
-<div class="column-5">
-    <label for="BathroomsFull"># of Bathrooms</label>
-    <input type="text" name="BathroomsFull" id="BathroomsFull" placeholder="Full Baths" value="<?php echo $listingData['BathroomsFull']; ?>" >
-    <input type="text" name="BathroomsThreeQuarter" id="BathroomsThreeQuarter" placeholder="Three-Quarter Baths" value="<?php echo $listingData['BathroomsThreeQuarter']; ?>" >
-    <input type="text" name="BathroomsHalf" id="BathroomsHalf" placeholder="Half Baths" value="<?php echo $listingData['BathroomsHalf']; ?>" >
-    <input type="text" name="BathroomsOneQuarter" id="BathroomsOneQuarter" placeholder="Quarter Baths" value="<?php echo $listingData['BathroomsOneQuarter']; ?>" >
-</div>
-
-<!-- <div>
-    <?php //echo $listingData['OwnersBedroom-RoomLength'] ?>
-</div>
-
-<div>
-    Bedroom 1
-</div> -->
-
-
  <button type="submit">Save Information</button>
 </form>
+
+
+<?php
+    require_once plugin_dir_path(__FILE__) . '/rooms.php';
+
+?>

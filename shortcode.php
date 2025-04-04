@@ -44,6 +44,12 @@ function render_dashboard_shortcode() {
             column-gap: 20px;
         }
 
+        .column-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            column-gap: 20px;
+        }
+
         .column-5{
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
