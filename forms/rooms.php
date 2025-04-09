@@ -1,269 +1,590 @@
 <?php
+
+require_once plugin_dir_path(__FILE__) . '../fetch-room-details.php';
+$updateBathroomURL = home_url('/wp-json/my-plugin/v1/update-number-of-bathrooms');
+
 // Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['resourseKey'])) {
     // Get the resource key
     $resourceKey = $_POST['resourseKey'];
+
+    //Update Rooms
+
+
+    $curl = curl_init();
+    foreach($rooms as $room){
+        // echo 'Deleting old rooms';
+        
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://api.nexusmls.io/PropertyRooms('{$room['RoomKey']}')",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+            CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer $mlsApiKey"
+            ],
+        ]);
+        
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        
+       
+        
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            // echo 'Room deleted successfully';
+        }
+    }
+
+    curl_close($curl);
     
     // Initialize rooms array
-    $rooms = [];
+    $newRooms = [];
     
     // Add Owner's Bedroom if checkbox is checked
     if (isset($_POST['OwnersBedroomYN']) && $_POST['OwnersBedroomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Owner's Bedroom",
             'BedroomClosetType' => isset($_POST['OwnersBedroomClosetType']) ? $_POST['OwnersBedroomClosetType'] : '',
             'RoomLevel' => isset($_POST['OwnersBedroomRoomLevel']) ? $_POST['OwnersBedroomRoomLevel'] : '',
             'RoomLength' => isset($_POST['OwnersBedroomLength']) ? $_POST['OwnersBedroomLength'] : '',
             'RoomWidth' => isset($_POST['OwnersBedroomWidth']) ? $_POST['OwnersBedroomWidth'] : ''
         ]);
+
+        //Update the $OwnersBedroom variable to reflect the new data
+        $OwnersBedroom = [
+            'RoomType' => "Owner's Bedroom",
+            'BedroomClosetType' => isset($_POST['OwnersBedroomClosetType']) ? $_POST['OwnersBedroomClosetType'] : '',
+            'RoomLevel' => isset($_POST['OwnersBedroomRoomLevel']) ? $_POST['OwnersBedroomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['OwnersBedroomLength']) ? $_POST['OwnersBedroomLength'] : '',
+            'RoomWidth' => isset($_POST['OwnersBedroomWidth']) ? $_POST['OwnersBedroomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $OwnersBedroom to null
+        $OwnersBedroom = null;
     }
     
     // Add Bedroom 1 if checkbox is checked
     if (isset($_POST['Bedroom1YN']) && $_POST['Bedroom1YN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Bedroom 1",
             'BedroomClosetType' => isset($_POST['Bedroom1ClosetType']) ? $_POST['Bedroom1ClosetType'] : '',
             'RoomLevel' => isset($_POST['Bedroom1RoomLevel']) ? $_POST['Bedroom1RoomLevel'] : '',
             'RoomLength' => isset($_POST['Bedroom1Length']) ? $_POST['Bedroom1Length'] : '',
             'RoomWidth' => isset($_POST['Bedroom1Width']) ? $_POST['Bedroom1Width'] : ''
         ]);
+
+        //Update the $Bedroom1 variable to reflect the new data
+        $Bedroom1 = [
+            'RoomType' => "Bedroom 1",
+            'BedroomClosetType' => isset($_POST['Bedroom1ClosetType']) ? $_POST['Bedroom1ClosetType'] : '',
+            'RoomLevel' => isset($_POST['Bedroom1RoomLevel']) ? $_POST['Bedroom1RoomLevel'] : '',
+            'RoomLength' => isset($_POST['Bedroom1Length']) ? $_POST['Bedroom1Length'] : '',
+            'RoomWidth' => isset($_POST['Bedroom1Width']) ? $_POST['Bedroom1Width'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Bedroom1 to null
+        $Bedroom1 = null;
     }
 
     // Add Bedroom 2 if checkbox is checked
     if (isset($_POST['Bedroom2YN']) && $_POST['Bedroom2YN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Bedroom 2",
             'BedroomClosetType' => isset($_POST['Bedroom2ClosetType']) ? $_POST['Bedroom2ClosetType'] : '',
             'RoomLevel' => isset($_POST['Bedroom2RoomLevel']) ? $_POST['Bedroom2RoomLevel'] : '',
             'RoomLength' => isset($_POST['Bedroom2Length']) ? $_POST['Bedroom2Length'] : '',
             'RoomWidth' => isset($_POST['Bedroom2Width']) ? $_POST['Bedroom2Width'] : ''
         ]);
+
+        //Update the $Bedroom2 variable to reflect the new data
+        $Bedroom2 = [
+            'RoomType' => "Bedroom 2",
+            'BedroomClosetType' => isset($_POST['Bedroom2ClosetType']) ? $_POST['Bedroom2ClosetType'] : '',
+            'RoomLevel' => isset($_POST['Bedroom2RoomLevel']) ? $_POST['Bedroom2RoomLevel'] : '',
+            'RoomLength' => isset($_POST['Bedroom2Length']) ? $_POST['Bedroom2Length'] : '',
+            'RoomWidth' => isset($_POST['Bedroom2Width']) ? $_POST['Bedroom2Width'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Bedroom2 to null
+        $Bedroom2 = null;
     }
 
     // Add Bedroom 3 if checkbox is checked
     if (isset($_POST['Bedroom3YN']) && $_POST['Bedroom3YN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Bedroom 3",
             'BedroomClosetType' => isset($_POST['Bedroom3ClosetType']) ? $_POST['Bedroom3ClosetType'] : '',
             'RoomLevel' => isset($_POST['Bedroom3RoomLevel']) ? $_POST['Bedroom3RoomLevel'] : '',
             'RoomLength' => isset($_POST['Bedroom3Length']) ? $_POST['Bedroom3Length'] : '',
             'RoomWidth' => isset($_POST['Bedroom3Width']) ? $_POST['Bedroom3Width'] : ''
         ]);
+
+        //Update the $Bedroom3 variable to reflect the new data
+        $Bedroom3 = [
+            'RoomType' => "Bedroom 3",
+            'BedroomClosetType' => isset($_POST['Bedroom3ClosetType']) ? $_POST['Bedroom3ClosetType'] : '',
+            'RoomLevel' => isset($_POST['Bedroom3RoomLevel']) ? $_POST['Bedroom3RoomLevel'] : '',
+            'RoomLength' => isset($_POST['Bedroom3Length']) ? $_POST['Bedroom3Length'] : '',
+            'RoomWidth' => isset($_POST['Bedroom3Width']) ? $_POST['Bedroom3Width'] : ''
+        ];
+
+    }else{
+        // If the checkbox is not checked, set $Bedroom3 to null
+        $Bedroom3 = null;
     }
 
     // Add Bedroom 4 if checkbox is checked
     if (isset($_POST['Bedroom4YN']) && $_POST['Bedroom4YN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Bedroom 4",
             'BedroomClosetType' => isset($_POST['Bedroom4ClosetType']) ? $_POST['Bedroom4ClosetType'] : '',
             'RoomLevel' => isset($_POST['Bedroom4RoomLevel']) ? $_POST['Bedroom4RoomLevel'] : '',
             'RoomLength' => isset($_POST['Bedroom4Length']) ? $_POST['Bedroom4Length'] : '',
             'RoomWidth' => isset($_POST['Bedroom4Width']) ? $_POST['Bedroom4Width'] : ''
         ]);
+
+        //Update the $Bedroom4 variable to reflect the new data
+        $Bedroom4 = [
+            'RoomType' => "Bedroom 4",
+            'BedroomClosetType' => isset($_POST['Bedroom4ClosetType']) ? $_POST['Bedroom4ClosetType'] : '',
+            'RoomLevel' => isset($_POST['Bedroom4RoomLevel']) ? $_POST['Bedroom4RoomLevel'] : '',
+            'RoomLength' => isset($_POST['Bedroom4Length']) ? $_POST['Bedroom4Length'] : '',
+            'RoomWidth' => isset($_POST['Bedroom4Width']) ? $_POST['Bedroom4Width'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Bedroom4 to null
+        $Bedroom4 = null;
     }
 
     // Add Bedroom 5 if checkbox is checked
     if (isset($_POST['Bedroom5YN']) && $_POST['Bedroom5YN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Bedroom 5",
             'BedroomClosetType' => isset($_POST['Bedroom5ClosetType']) ? $_POST['Bedroom5ClosetType'] : '',
             'RoomLevel' => isset($_POST['Bedroom5RoomLevel']) ? $_POST['Bedroom5RoomLevel'] : '',
             'RoomLength' => isset($_POST['Bedroom5Length']) ? $_POST['Bedroom5Length'] : '',
             'RoomWidth' => isset($_POST['Bedroom5Width']) ? $_POST['Bedroom5Width'] : ''
         ]);
+
+        //Update the $Bedroom5 variable to reflect the new data
+        $Bedroom5 = [
+            'RoomType' => "Bedroom 5",
+            'BedroomClosetType' => isset($_POST['Bedroom5ClosetType']) ? $_POST['Bedroom5ClosetType'] : '',
+            'RoomLevel' => isset($_POST['Bedroom5RoomLevel']) ? $_POST['Bedroom5RoomLevel'] : '',
+            'RoomLength' => isset($_POST['Bedroom5Length']) ? $_POST['Bedroom5Length'] : '',
+            'RoomWidth' => isset($_POST['Bedroom5Width']) ? $_POST['Bedroom5Width'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Bedroom5 to null
+        $Bedroom5 = null;
     }
 
     // Add Dining Room if checkbox is checked
     if (isset($_POST['DiningRoomYN']) && $_POST['DiningRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Dining Room",
             'BedroomClosetType' => isset($_POST['DiningRoomClosetType']) ? $_POST['DiningRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['DiningRoomRoomLevel']) ? $_POST['DiningRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['DiningRoomLength']) ? $_POST['DiningRoomLength'] : '',
             'RoomWidth' => isset($_POST['DiningRoomWidth']) ? $_POST['DiningRoomWidth'] : ''
         ]);
+
+        //Update the $DiningRoom variable to reflect the new data
+        $DiningRoom = [
+            'RoomType' => "Dining Room",
+            'BedroomClosetType' => isset($_POST['DiningRoomClosetType']) ? $_POST['DiningRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['DiningRoomRoomLevel']) ? $_POST['DiningRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['DiningRoomLength']) ? $_POST['DiningRoomLength'] : '',
+            'RoomWidth' => isset($_POST['DiningRoomWidth']) ? $_POST['DiningRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $DiningRoom to null
+        $DiningRoom = null;
     }
 
     // Add Basement if checkbox is checked
     if (isset($_POST['BasementYN']) && $_POST['BasementYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Basement",
             'BedroomClosetType' => isset($_POST['BasementClosetType']) ? $_POST['BasementClosetType'] : '',
             'RoomLevel' => isset($_POST['BasementRoomLevel']) ? $_POST['BasementRoomLevel'] : '',
             'RoomLength' => isset($_POST['BasementLength']) ? $_POST['BasementLength'] : '',
             'RoomWidth' => isset($_POST['BasementWidth']) ? $_POST['BasementWidth'] : ''
         ]);
+
+        //Update the $Basement variable to reflect the new data
+        $Basement = [
+            'RoomType' => "Basement",
+            'BedroomClosetType' => isset($_POST['BasementClosetType']) ? $_POST['BasementClosetType'] : '',
+            'RoomLevel' => isset($_POST['BasementRoomLevel']) ? $_POST['BasementRoomLevel'] : '',
+            'RoomLength' => isset($_POST['BasementLength']) ? $_POST['BasementLength'] : '',
+            'RoomWidth' => isset($_POST['BasementWidth']) ? $_POST['BasementWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Basement to null
+        $Basement = null;
     }
 
     // Add Den if checkbox is checked
     if (isset($_POST['DenYN']) && $_POST['DenYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Den",
             'BedroomClosetType' => isset($_POST['DenClosetType']) ? $_POST['DenClosetType'] : '',
             'RoomLevel' => isset($_POST['DenRoomLevel']) ? $_POST['DenRoomLevel'] : '',
             'RoomLength' => isset($_POST['DenLength']) ? $_POST['DenLength'] : '',
             'RoomWidth' => isset($_POST['DenWidth']) ? $_POST['DenWidth'] : ''
         ]);
+
+        //Update the $Den variable to reflect the new data
+        $Den = [
+            'RoomType' => "Den",
+            'BedroomClosetType' => isset($_POST['DenClosetType']) ? $_POST['DenClosetType'] : '',
+            'RoomLevel' => isset($_POST['DenRoomLevel']) ? $_POST['DenRoomLevel'] : '',
+            'RoomLength' => isset($_POST['DenLength']) ? $_POST['DenLength'] : '',
+            'RoomWidth' => isset($_POST['DenWidth']) ? $_POST['DenWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Den to null
+        $Den = null;
     }
 
     // Add Family Room if checkbox is checked
     if (isset($_POST['FamilyRoomYN']) && $_POST['FamilyRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Family Room",
             'BedroomClosetType' => isset($_POST['FamilyRoomClosetType']) ? $_POST['FamilyRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['FamilyRoomRoomLevel']) ? $_POST['FamilyRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['FamilyRoomLength']) ? $_POST['FamilyRoomLength'] : '',
             'RoomWidth' => isset($_POST['FamilyRoomWidth']) ? $_POST['FamilyRoomWidth'] : ''
         ]);
+
+        //Update the $FamilyRoom variable to reflect the new data
+        $FamilyRoom = [
+            'RoomType' => "Family Room",
+            'BedroomClosetType' => isset($_POST['FamilyRoomClosetType']) ? $_POST['FamilyRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['FamilyRoomRoomLevel']) ? $_POST['FamilyRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['FamilyRoomLength']) ? $_POST['FamilyRoomLength'] : '',
+            'RoomWidth' => isset($_POST['FamilyRoomWidth']) ? $_POST['FamilyRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $FamilyRoom to null
+        $FamilyRoom = null;
     }
 
     // Add Game Room if checkbox is checked
     if (isset($_POST['GameRoomYN']) && $_POST['GameRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Game Room",
             'BedroomClosetType' => isset($_POST['GameRoomClosetType']) ? $_POST['GameRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['GameRoomRoomLevel']) ? $_POST['GameRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['GameRoomLength']) ? $_POST['GameRoomLength'] : '',
             'RoomWidth' => isset($_POST['GameRoomWidth']) ? $_POST['GameRoomWidth'] : ''
         ]);
+
+        //Update the $GameRoom variable to reflect the new data
+        $GameRoom = [
+            'RoomType' => "Game Room",
+            'BedroomClosetType' => isset($_POST['GameRoomClosetType']) ? $_POST['GameRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['GameRoomRoomLevel']) ? $_POST['GameRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['GameRoomLength']) ? $_POST['GameRoomLength'] : '',
+            'RoomWidth' => isset($_POST['GameRoomWidth']) ? $_POST['GameRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $GameRoom to null
+        $GameRoom = null;
     }
 
     // Add Great Room if checkbox is checked
     if (isset($_POST['GreatRoomYN']) && $_POST['GreatRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Great Room",
             'BedroomClosetType' => isset($_POST['GreatRoomClosetType']) ? $_POST['GreatRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['GreatRoomRoomLevel']) ? $_POST['GreatRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['GreatRoomLength']) ? $_POST['GreatRoomLength'] : '',
             'RoomWidth' => isset($_POST['GreatRoomWidth']) ? $_POST['GreatRoomWidth'] : ''
         ]);
+
+        //Update the $GreatRoom variable to reflect the new data
+        $GreatRoom = [
+            'RoomType' => "Great Room",
+            'BedroomClosetType' => isset($_POST['GreatRoomClosetType']) ? $_POST['GreatRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['GreatRoomRoomLevel']) ? $_POST['GreatRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['GreatRoomLength']) ? $_POST['GreatRoomLength'] : '',
+            'RoomWidth' => isset($_POST['GreatRoomWidth']) ? $_POST['GreatRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $GreatRoom to null
+        $GreatRoom = null;
     }
 
     // Add Gym if checkbox is checked
     if (isset($_POST['GymYN']) && $_POST['GymYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Gym",
             'BedroomClosetType' => isset($_POST['GymClosetType']) ? $_POST['GymClosetType'] : '',
             'RoomLevel' => isset($_POST['GymRoomLevel']) ? $_POST['GymRoomLevel'] : '',
             'RoomLength' => isset($_POST['GymLength']) ? $_POST['GymLength'] : '',
             'RoomWidth' => isset($_POST['GymWidth']) ? $_POST['GymWidth'] : ''
         ]);
+
+        //Update the $Gym variable to reflect the new data
+        $Gym = [
+            'RoomType' => "Gym",
+            'BedroomClosetType' => isset($_POST['GymClosetType']) ? $_POST['GymClosetType'] : '',
+            'RoomLevel' => isset($_POST['GymRoomLevel']) ? $_POST['GymRoomLevel'] : '',
+            'RoomLength' => isset($_POST['GymLength']) ? $_POST['GymLength'] : '',
+            'RoomWidth' => isset($_POST['GymWidth']) ? $_POST['GymWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Gym to null
+        $Gym = null;
     }
 
     // Add Kitchen if checkbox is checked
     if (isset($_POST['KitchenYN']) && $_POST['KitchenYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Kitchen",
             'BedroomClosetType' => isset($_POST['KitchenClosetType']) ? $_POST['KitchenClosetType'] : '',
             'RoomLevel' => isset($_POST['KitchenRoomLevel']) ? $_POST['KitchenRoomLevel'] : '',
             'RoomLength' => isset($_POST['KitchenLength']) ? $_POST['KitchenLength'] : '',
             'RoomWidth' => isset($_POST['KitchenWidth']) ? $_POST['KitchenWidth'] : ''
         ]);
+
+        //Update the $Kitchen variable to reflect the new data
+        $Kitchen = [
+            'RoomType' => "Kitchen",
+            'BedroomClosetType' => isset($_POST['KitchenClosetType']) ? $_POST['KitchenClosetType'] : '',
+            'RoomLevel' => isset($_POST['KitchenRoomLevel']) ? $_POST['KitchenRoomLevel'] : '',
+            'RoomLength' => isset($_POST['KitchenLength']) ? $_POST['KitchenLength'] : '',
+            'RoomWidth' => isset($_POST['KitchenWidth']) ? $_POST['KitchenWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Kitchen to null
+        $Kitchen = null;
     }
 
     // Add Laundry if checkbox is checked
     if (isset($_POST['LaundryYN']) && $_POST['LaundryYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Laundry",
             'BedroomClosetType' => isset($_POST['LaundryClosetType']) ? $_POST['LaundryClosetType'] : '',
             'RoomLevel' => isset($_POST['LaundryRoomLevel']) ? $_POST['LaundryRoomLevel'] : '',
             'RoomLength' => isset($_POST['LaundryLength']) ? $_POST['LaundryLength'] : '',
             'RoomWidth' => isset($_POST['LaundryWidth']) ? $_POST['LaundryWidth'] : ''
         ]);
+
+        //Update the $Laundry variable to reflect the new data
+        $Laundry = [
+            'RoomType' => "Laundry",
+            'BedroomClosetType' => isset($_POST['LaundryClosetType']) ? $_POST['LaundryClosetType'] : '',
+            'RoomLevel' => isset($_POST['LaundryRoomLevel']) ? $_POST['LaundryRoomLevel'] : '',
+            'RoomLength' => isset($_POST['LaundryLength']) ? $_POST['LaundryLength'] : '',
+            'RoomWidth' => isset($_POST['LaundryWidth']) ? $_POST['LaundryWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Laundry to null
+        $Laundry = null;
     }
 
     // Add Library if checkbox is checked
     if (isset($_POST['LibraryYN']) && $_POST['LibraryYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Library",
             'BedroomClosetType' => isset($_POST['LibraryClosetType']) ? $_POST['LibraryClosetType'] : '',
             'RoomLevel' => isset($_POST['LibraryRoomLevel']) ? $_POST['LibraryRoomLevel'] : '',
             'RoomLength' => isset($_POST['LibraryLength']) ? $_POST['LibraryLength'] : '',
             'RoomWidth' => isset($_POST['LibraryWidth']) ? $_POST['LibraryWidth'] : ''
         ]);
+
+        //Update the $Library variable to reflect the new data
+        $Library = [
+            'RoomType' => "Library",
+            'BedroomClosetType' => isset($_POST['LibraryClosetType']) ? $_POST['LibraryClosetType'] : '',
+            'RoomLevel' => isset($_POST['LibraryRoomLevel']) ? $_POST['LibraryRoomLevel'] : '',
+            'RoomLength' => isset($_POST['LibraryLength']) ? $_POST['LibraryLength'] : '',
+            'RoomWidth' => isset($_POST['LibraryWidth']) ? $_POST['LibraryWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Library to null
+        $Library = null;
     }
 
     // Add Living Room if checkbox is checked
     if (isset($_POST['LivingRoomYN']) && $_POST['LivingRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Living Room",
             'BedroomClosetType' => isset($_POST['LivingRoomClosetType']) ? $_POST['LivingRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['LivingRoomRoomLevel']) ? $_POST['LivingRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['LivingRoomLength']) ? $_POST['LivingRoomLength'] : '',
             'RoomWidth' => isset($_POST['LivingRoomWidth']) ? $_POST['LivingRoomWidth'] : ''
         ]);
+
+        //Update the $LivingRoom variable to reflect the new data
+        $LivingRoom = [
+            'RoomType' => "Living Room",
+            'BedroomClosetType' => isset($_POST['LivingRoomClosetType']) ? $_POST['LivingRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['LivingRoomRoomLevel']) ? $_POST['LivingRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['LivingRoomLength']) ? $_POST['LivingRoomLength'] : '',
+            'RoomWidth' => isset($_POST['LivingRoomWidth']) ? $_POST['LivingRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $LivingRoom to null
+        $LivingRoom = null;
     }
 
     // Add Loft if checkbox is checked
     if (isset($_POST['LoftYN']) && $_POST['LoftYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Loft",
             'BedroomClosetType' => isset($_POST['LoftClosetType']) ? $_POST['LoftClosetType'] : '',
             'RoomLevel' => isset($_POST['LoftRoomLevel']) ? $_POST['LoftRoomLevel'] : '',
             'RoomLength' => isset($_POST['LoftLength']) ? $_POST['LoftLength'] : '',
             'RoomWidth' => isset($_POST['LoftWidth']) ? $_POST['LoftWidth'] : ''
         ]);
+
+        //Update the $Loft variable to reflect the new data
+        $Loft = [
+            'RoomType' => "Loft",
+            'BedroomClosetType' => isset($_POST['LoftClosetType']) ? $_POST['LoftClosetType'] : '',
+            'RoomLevel' => isset($_POST['LoftRoomLevel']) ? $_POST['LoftRoomLevel'] : '',
+            'RoomLength' => isset($_POST['LoftLength']) ? $_POST['LoftLength'] : '',
+            'RoomWidth' => isset($_POST['LoftWidth']) ? $_POST['LoftWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Loft to null
+        $Loft = null;
     }
 
     // Add Media Room if checkbox is checked
     if (isset($_POST['MediaRoomYN']) && $_POST['MediaRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Media Room",
             'BedroomClosetType' => isset($_POST['MediaRoomClosetType']) ? $_POST['MediaRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['MediaRoomRoomLevel']) ? $_POST['MediaRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['MediaRoomLength']) ? $_POST['MediaRoomLength'] : '',
             'RoomWidth' => isset($_POST['MediaRoomWidth']) ? $_POST['MediaRoomWidth'] : ''
         ]);
+
+        //Update the $MediaRoom variable to reflect the new data
+        $MediaRoom = [
+            'RoomType' => "Media Room",
+            'BedroomClosetType' => isset($_POST['MediaRoomClosetType']) ? $_POST['MediaRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['MediaRoomRoomLevel']) ? $_POST['MediaRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['MediaRoomLength']) ? $_POST['MediaRoomLength'] : '',
+            'RoomWidth' => isset($_POST['MediaRoomWidth']) ? $_POST['MediaRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $MediaRoom to null
+        $MediaRoom = null;
     }
 
     // Add Office if checkbox is checked
     if (isset($_POST['OfficeYN']) && $_POST['OfficeYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Office",
             'BedroomClosetType' => isset($_POST['OfficeClosetType']) ? $_POST['OfficeClosetType'] : '',
             'RoomLevel' => isset($_POST['OfficeRoomLevel']) ? $_POST['OfficeRoomLevel'] : '',
             'RoomLength' => isset($_POST['OfficeLength']) ? $_POST['OfficeLength'] : '',
             'RoomWidth' => isset($_POST['OfficeWidth']) ? $_POST['OfficeWidth'] : ''
         ]);
+
+        //Update the $Office variable to reflect the new data
+        $Office = [
+            'RoomType' => "Office",
+            'BedroomClosetType' => isset($_POST['OfficeClosetType']) ? $_POST['OfficeClosetType'] : '',
+            'RoomLevel' => isset($_POST['OfficeRoomLevel']) ? $_POST['OfficeRoomLevel'] : '',
+            'RoomLength' => isset($_POST['OfficeLength']) ? $_POST['OfficeLength'] : '',
+            'RoomWidth' => isset($_POST['OfficeWidth']) ? $_POST['OfficeWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Office to null
+        $Office = null;
     }
 
     // Add Sauna if checkbox is checked
     if (isset($_POST['SaunaYN']) && $_POST['SaunaYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Sauna",
             'BedroomClosetType' => isset($_POST['SaunaClosetType']) ? $_POST['SaunaClosetType'] : '',
             'RoomLevel' => isset($_POST['SaunaRoomLevel']) ? $_POST['SaunaRoomLevel'] : '',
             'RoomLength' => isset($_POST['SaunaLength']) ? $_POST['SaunaLength'] : '',
             'RoomWidth' => isset($_POST['SaunaWidth']) ? $_POST['SaunaWidth'] : ''
         ]);
+
+        //Update the $Sauna variable to reflect the new data
+        $Sauna = [
+            'RoomType' => "Sauna",
+            'BedroomClosetType' => isset($_POST['SaunaClosetType']) ? $_POST['SaunaClosetType'] : '',
+            'RoomLevel' => isset($_POST['SaunaRoomLevel']) ? $_POST['SaunaRoomLevel'] : '',
+            'RoomLength' => isset($_POST['SaunaLength']) ? $_POST['SaunaLength'] : '',
+            'RoomWidth' => isset($_POST['SaunaWidth']) ? $_POST['SaunaWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Sauna to null
+        $Sauna = null;
     }
 
     // Add Utility Room if checkbox is checked
     if (isset($_POST['UtilityRoomYN']) && $_POST['UtilityRoomYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Utility Room",
             'BedroomClosetType' => isset($_POST['UtilityRoomClosetType']) ? $_POST['UtilityRoomClosetType'] : '',
             'RoomLevel' => isset($_POST['UtilityRoomRoomLevel']) ? $_POST['UtilityRoomRoomLevel'] : '',
             'RoomLength' => isset($_POST['UtilityRoomLength']) ? $_POST['UtilityRoomLength'] : '',
             'RoomWidth' => isset($_POST['UtilityRoomWidth']) ? $_POST['UtilityRoomWidth'] : ''
         ]);
+
+        //Update the $UtilityRoom variable to reflect the new data
+        $UtilityRoom = [
+            'RoomType' => "Utility Room",
+            'BedroomClosetType' => isset($_POST['UtilityRoomClosetType']) ? $_POST['UtilityRoomClosetType'] : '',
+            'RoomLevel' => isset($_POST['UtilityRoomRoomLevel']) ? $_POST['UtilityRoomRoomLevel'] : '',
+            'RoomLength' => isset($_POST['UtilityRoomLength']) ? $_POST['UtilityRoomLength'] : '',
+            'RoomWidth' => isset($_POST['UtilityRoomWidth']) ? $_POST['UtilityRoomWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $UtilityRoom to null
+        $UtilityRoom = null;
     }
 
     // Add Workshop if checkbox is checked
     if (isset($_POST['WorkshopYN']) && $_POST['WorkshopYN'] == 'true') {
-        array_push($rooms, [
+        array_push($newRooms, [
             'RoomType' => "Workshop",
             'BedroomClosetType' => isset($_POST['WorkshopClosetType']) ? $_POST['WorkshopClosetType'] : '',
             'RoomLevel' => isset($_POST['WorkshopRoomLevel']) ? $_POST['WorkshopRoomLevel'] : '',
             'RoomLength' => isset($_POST['WorkshopLength']) ? $_POST['WorkshopLength'] : '',
             'RoomWidth' => isset($_POST['WorkshopWidth']) ? $_POST['WorkshopWidth'] : ''
         ]);
+
+        //Update the $Workshop variable to reflect the new data
+        $Workshop = [
+            'RoomType' => "Workshop",
+            'BedroomClosetType' => isset($_POST['WorkshopClosetType']) ? $_POST['WorkshopClosetType'] : '',
+            'RoomLevel' => isset($_POST['WorkshopRoomLevel']) ? $_POST['WorkshopRoomLevel'] : '',
+            'RoomLength' => isset($_POST['WorkshopLength']) ? $_POST['WorkshopLength'] : '',
+            'RoomWidth' => isset($_POST['WorkshopWidth']) ? $_POST['WorkshopWidth'] : ''
+        ];
+    }else{
+        // If the checkbox is not checked, set $Workshop to null
+        $Workshop = null;
     }
 
-    foreach($rooms as $room) {
+    // echo '<pre>';
+    //     var_Dump($newRooms);
+    // echo '</pre>';
+
+    //Adding new rooms to the listing
+
+    foreach($newRooms as $room) {
 
         curl_setopt_array($curl, [
-          CURLOPT_URL => "https://api.nexusmls.io/Rooms",
+          CURLOPT_URL => "https://api.nexusmls.io/PropertyRooms",
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => "",
           CURLOPT_MAXREDIRS => 10,
@@ -271,7 +592,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => "POST",
           CURLOPT_POSTFIELDS => json_encode([
-            'ResourceRecordKey' => $resourceKey,
+            'ListingKey' => $resourceKey,
             'RoomType' => $room['RoomType'],
             'BedroomClosetType' => $room['BedroomClosetType'],
             'RoomLevel' => $room['RoomLevel'],
@@ -293,19 +614,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           echo "cURL Error #:" . $err;
         }else{
             $jsonResponse = json_decode($response, true);
-            echo '<pre>';
-                var_Dump($jsonResponse);
-            echo '</pre>';
+            
+
+            // echo '<pre>';
+            //     var_Dump($jsonResponse);
+            // echo '</pre>';
         }
 
     }
+
 }
 
 ?>
 
 
 
-<form method="POST" class="nexus-mls-form listing-tab-content" style="margin-top: 50px;">
+<form method="POST" class="nexus-mls-form listing-tab-content" style="margin-top: 50px;" id="roomForm">
 <input type="hidden" name="resourseKey" value="<?php echo $listing; ?>">
 
 
@@ -314,10 +638,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="column-5">
     <label for="BathroomsFull"># of Bathrooms</label>
-    <input type="text" name="BathroomsFull" id="BathroomsFull" placeholder="Full Baths" value="<?php echo $listingData['BathroomsFull']; ?>" >
-    <input type="text" name="BathroomsThreeQuarter" id="BathroomsThreeQuarter" placeholder="Three-Quarter Baths" value="<?php echo $listingData['BathroomsThreeQuarter']; ?>" >
-    <input type="text" name="BathroomsHalf" id="BathroomsHalf" placeholder="Half Baths" value="<?php echo $listingData['BathroomsHalf']; ?>" >
-    <input type="text" name="BathroomsOneQuarter" id="BathroomsOneQuarter" placeholder="Quarter Baths" value="<?php echo $listingData['BathroomsOneQuarter']; ?>" >
+    <input class="bathroomField" type="text" name="BathroomsFull" id="BathroomsFull" placeholder="Full Baths" value="<?php echo $listingData['BathroomsFull']; ?>" >
+    <input class="bathroomField" type="text" name="BathroomsThreeQuarter" id="BathroomsThreeQuarter" placeholder="Three-Quarter Baths" value="<?php echo $listingData['BathroomsThreeQuarter']; ?>" >
+    <input class="bathroomField" type="text" name="BathroomsHalf" id="BathroomsHalf" placeholder="Half Baths" value="<?php echo $listingData['BathroomsHalf']; ?>" >
+    <input class="bathroomField" type="text" name="BathroomsOneQuarter" id="BathroomsOneQuarter" placeholder="Quarter Baths" value="<?php echo $listingData['BathroomsOneQuarter']; ?>" >
 </div>
 
 <div>
@@ -1209,6 +1533,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
 
 
-
     });
+</script>
+
+
+<script>
+
+// Wait for the document to be ready
+jQuery(document).ready(function($) {
+    // Add submit handler to the roomForm
+    $('#roomForm').on('submit', function(e) {
+        // Prevent the default form submission initially
+        e.preventDefault();
+        
+        // Store reference to the form
+        const form = this;
+        
+        // Send AJAX request first
+        fetch('<?php echo esc_js($updateBathroomURL); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                listing_key: '<?php echo esc_js($_GET['listing']); ?>',
+                BathroomsFull: $("#BathroomsFull").val(),
+                BathroomsThreeQuarter: $("#BathroomsThreeQuarter").val(),
+                BathroomsHalf: $("#BathroomsHalf").val(),
+                BathroomsOneQuarter: $("#BathroomsOneQuarter").val(),
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            
+            // Show success message
+            // alert('Bathroom information updated successfully!');
+            
+            // Continue with the normal form submission
+            form.submit();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Show error message to the user
+            alert('There was a problem updating the bathroom information. Please try again.');
+            
+            // Optionally allow the form to submit anyway
+            // Uncomment the line below if you want the form to submit even on AJAX failure
+            // form.submit();
+        });
+    });
+});
+
 </script>

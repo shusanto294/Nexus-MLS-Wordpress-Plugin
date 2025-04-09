@@ -25,9 +25,8 @@ curl_close($curl);
 $listingData = json_decode($response, true);
 
 if ($err) {
+  $listingData = array();
   echo "cURL Error #:" . $err;
 } else {
-    // echo '<pre>';
-    // var_Dump($listingData);
-    // echo '</pre>';
+  // $listingData = json_decode($response, true);
 }

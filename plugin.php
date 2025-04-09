@@ -162,6 +162,7 @@ class MLSIntegration {
 
     }
 
+
 }
 
 $nexusMLS = new MLSIntegration();
@@ -223,3 +224,59 @@ function handle_media_upload() {
 
 
 add_action('init', array($nexusMLS, 'nexus_mls_add_new_listing'));
+
+
+
+
+//Update # of bathrooms
+
+
+function register_bathrooms_update_endpoint() {
+    register_rest_route('my-plugin/v1', '/update-number-of-bathrooms', array(
+        'methods' => 'POST',
+        'callback' => 'update_bathrooms_callback'
+    ));
+}
+add_action('rest_api_init', 'register_bathrooms_update_endpoint');
+
+
+function update_bathrooms_callback($request) {
+   //Listing key
+    $listing_key = $request['listing_key'];
+    $apiKey = get_option('mls_api_key', '');
+
+    // Prepare the data to be sent to the API
+    $data = array(
+        'BathroomsFull' => $request['BathroomsFull'],
+        'BathroomsThreeQuarter' => $request['BathroomsThreeQuarter'],
+        'BathroomsHalf' => $request['BathroomsHalf'],
+        'BathroomsOneQuarter' => $request['BathroomsOneQuarter']
+    );
+
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "https://api.nexusmls.io/Property('$listing_key')",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "PATCH",
+        CURLOPT_POSTFIELDS => json_encode($data), // Send form data as JSON
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer $apiKey",
+            "Content-Type: application/json",                           
+        ],
+    ]);
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+    return "listing updated successfully";
+
+}
+

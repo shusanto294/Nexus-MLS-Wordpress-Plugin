@@ -26,6 +26,8 @@ $listingRooms = json_decode($response, true);
 
 $rooms = $listingRooms['value'];
 
+// var_dump($oldRooms);
+
 $OwnersBedroom = null;
 $Bedroom1 = null;
 $Bedroom2 = null;

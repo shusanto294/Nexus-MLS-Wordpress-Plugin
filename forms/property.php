@@ -42,8 +42,9 @@ if(isset($_POST['ListingKey'])):
 
 endif;
 
+
 require_once plugin_dir_path(__FILE__) . '../fetch-listing-details.php';
-require_once plugin_dir_path(__FILE__) . '../fetch-room-details.php';
+
 
 
 ?>
