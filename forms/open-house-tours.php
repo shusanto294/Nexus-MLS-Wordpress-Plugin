@@ -4,65 +4,10 @@ require plugin_dir_path(__FILE__) . '../fetch-open-houses.php';
 
 //Delete open houses
 
-if(isset($_POST['OpenHouseYN'])):
+// $switchValue = $_POST['OpenHouseYN'];
+// var_dump($switchValue);
 
-    require plugin_dir_path(__FILE__) . '../delete-open-houses.php';   
 
-    //Add new open house
-
-    // Get the form input values
-    $startTime = $_POST['OpenHouseStartTime']; // Format: HH:MM
-    $endTime = $_POST['OpenHouseEndTime'];     // Format: HH:MM
-    $date = $_POST['OpenHouseDate'];           // Format: YYYY-MM-DD
-
-    // Convert to ISO format (YYYY-MM-DDThh:mm:ss.sssZ)
-    $startDateTime = new DateTime($date . 'T' . $startTime . ':00');
-    $endDateTime = new DateTime($date . 'T' . $endTime . ':00');
-    $dateDateTime = new DateTime($date . 'T00:00:00');
-
-    // Format to ISO 8601 with milliseconds and Z timezone
-    $startISO = $startDateTime->format('Y-m-d\TH:i:s') . '.000Z';
-    $endISO = $endDateTime->format('Y-m-d\TH:i:s') . '.000Z';
-    $dateISO = $dateDateTime->format('Y-m-d\TH:i:s') . '.000Z';
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, [
-        CURLOPT_URL => "https://api.nexusmls.io/OpenHouse",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => json_encode([
-          'ListingKey' => $listing,
-          'OpenHouseStartTime' => $startISO,
-          'OpenHouseEndTime' => $endISO,
-          'OpenHouseDate' => $dateISO
-        ]),
-        CURLOPT_HTTPHEADER => [
-          "Authorization: Bearer $mlsApiKey",
-          "Content-Type: application/json"
-        ],
-      ]);
-      
-      $response = curl_exec($curl);
-      $err = curl_error($curl);
-      
-      curl_close($curl);
-      
-      if ($err) {
-        echo "cURL Error #:" . $err;
-      }else{
-          $jsonResponse = json_decode($response, true);
-          $OpenHouses[] = $jsonResponse;
-      }
-
-else:
-    require plugin_dir_path(__FILE__) . '../delete-open-houses.php';
-    $OpenHouses = array();
-endif;
 
 
 // Process the form submission
@@ -104,10 +49,72 @@ if(isset($_POST['ListingKey'])):
     }
 
 
+    if(isset($_POST['OpenHouseYN'])):
+
+        require plugin_dir_path(__FILE__) . '../delete-open-houses.php';   
+    
+        //Add new open house
+    
+        // Get the form input values
+        $startTime = $_POST['OpenHouseStartTime']; // Format: HH:MM
+        $endTime = $_POST['OpenHouseEndTime'];     // Format: HH:MM
+        $date = $_POST['OpenHouseDate'];           // Format: YYYY-MM-DD
+    
+        // Convert to ISO format (YYYY-MM-DDThh:mm:ss.sssZ)
+        $startDateTime = new DateTime($date . 'T' . $startTime . ':00');
+        $endDateTime = new DateTime($date . 'T' . $endTime . ':00');
+        $dateDateTime = new DateTime($date . 'T00:00:00');
+    
+        // Format to ISO 8601 with milliseconds and Z timezone
+        $startISO = $startDateTime->format('Y-m-d\TH:i:s') . '.000Z';
+        $endISO = $endDateTime->format('Y-m-d\TH:i:s') . '.000Z';
+        $dateISO = $dateDateTime->format('Y-m-d\TH:i:s') . '.000Z';
+    
+        $curl = curl_init();
+    
+        curl_setopt_array($curl, [
+            CURLOPT_URL => "https://api.nexusmls.io/OpenHouse",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode([
+              'ListingKey' => $listing,
+              'OpenHouseStartTime' => $startISO,
+              'OpenHouseEndTime' => $endISO,
+              'OpenHouseDate' => $dateISO
+            ]),
+            CURLOPT_HTTPHEADER => [
+              "Authorization: Bearer $mlsApiKey",
+              "Content-Type: application/json"
+            ],
+          ]);
+          
+          $response = curl_exec($curl);
+          $err = curl_error($curl);
+          
+          curl_close($curl);
+          
+          if ($err) {
+            echo "cURL Error #:" . $err;
+          }else{
+              $jsonResponse = json_decode($response, true);
+              $OpenHouses[] = $jsonResponse;
+          }
+    else:
+        require plugin_dir_path(__FILE__) . '../delete-open-houses.php';   
+        $OpenHouses = array();
+    endif;
+
+
 
 endif;
 
 require plugin_dir_path(__FILE__) . '../fetch-listing-details.php';
+
+// var_dump($OpenHouses);
 
 
 ?>
