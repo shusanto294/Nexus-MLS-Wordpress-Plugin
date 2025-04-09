@@ -190,6 +190,10 @@ function render_dashboard_shortcode() {
                 gap: 20px;
                 padding-bottom: 50px;
             }
+
+            .column-3, .column-4, .column-5 {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
